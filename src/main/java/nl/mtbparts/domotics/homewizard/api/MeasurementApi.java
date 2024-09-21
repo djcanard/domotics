@@ -7,6 +7,6 @@ import jakarta.ws.rs.Path;
 public interface MeasurementApi {
 
     @GET
-    MeasurementResponse measurement();
+    MeasurementResponse request();
 
 }

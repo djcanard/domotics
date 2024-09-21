@@ -7,6 +7,6 @@ import jakarta.ws.rs.Path;
 public interface BasicApi {
 
     @GET
-    BasicResponse basic();
+    BasicResponse request();
 
 }

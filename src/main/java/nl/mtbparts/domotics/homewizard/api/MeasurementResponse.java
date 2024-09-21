@@ -47,7 +47,7 @@ public class MeasurementResponse {
     Double totalPowerExportT2Kwh;
 
     @JsonProperty("active_power_w")
-    Double activePower;
+    Double activePowerW;
 
     @JsonProperty("active_power_l1_w")
     Double activePowerL1W;
@@ -56,16 +56,16 @@ public class MeasurementResponse {
     Double activeCurrentL1A;
 
     @JsonProperty("voltage_sag_l1_count")
-    Double voltageSagL1Count;
+    Integer voltageSagL1Count;
 
     @JsonProperty("voltage_swell_l1_count")
-    Double voltageSwellL1Count;
+    Integer voltageSwellL1Count;
 
     @JsonProperty("any_power_fail_count")
-    Double anyPowerFailCount;
+    Integer anyPowerFailCount;
 
     @JsonProperty("long_power_fail_count")
-    Double longPowerFailCount;
+    Integer longPowerFailCount;
 
     @JsonProperty("external")
     List<String> external;
