@@ -39,23 +39,29 @@ public class P1MeterConsumer {
     }
 
     private void logBasic(HomewizardDeviceInfo deviceInfo) {
-        if (deviceInfo.isApiEnabled()) {
-            BasicResponse response = apiProvider.basic(deviceInfo.getHost(), deviceInfo.getPort()).request();
-            log.info("basic: {}", response);
+        if (!deviceInfo.isApiEnabled()) {
+            return;
         }
+
+        BasicResponse response = apiProvider.basic(deviceInfo.getHost(), deviceInfo.getPort()).request();
+        log.info("basic: {}", response);
     }
+
     public void logMeasurement(HomewizardDeviceInfo deviceInfo) {
-//        if (deviceInfo.isApiEnabled()) {
-            try {
-                MeasurementResponse response = apiProvider.measurement(deviceInfo.getHost(), deviceInfo.getPort()).request();
-                log.info("measurement: {}", response);
-            } catch (WebApplicationException e) {
-                log.error(e.getMessage(), e);
-                if (e.getResponse().getStatus() == 403) {
-                    unscheduleMeasurement(deviceInfo);
-                }
+        if (!deviceInfo.isApiEnabled()) {
+            return;
+        }
+
+        try {
+            MeasurementResponse response = apiProvider.measurement(deviceInfo.getHost(), deviceInfo.getPort()).request();
+            log.info("measurement: {}", response);
+        } catch (WebApplicationException e) {
+            log.error(e.getMessage(), e);
+            if (e.getResponse().getStatus() == 403) {
+                unscheduleMeasurement(deviceInfo);
             }
-//        }
+        }
+
     }
 
     private void scheduleMeasurement(HomewizardDeviceInfo deviceInfo) {
