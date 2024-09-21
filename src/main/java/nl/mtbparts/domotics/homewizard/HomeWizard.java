@@ -12,7 +12,7 @@ public class HomeWizard {
     @Inject
     HomeWizardService homeWizardService;
 
-    @Scheduled(every = "5s")
+    @Scheduled(every = "30s")
     public void logMeasurement() {
         log.info("measurement: {}", homeWizardService.measurement());
     }
