@@ -1,7 +1,7 @@
 {
-  "product_name": "P1 meter",
+  "product_name": "P1 Meter",
   "product_type": "HWE-P1",
   "serial": "5c2faf0ad04a",
-  "firmware_version": "4.19",
+  "firmware_version": "5.18",
   "api_version": "v1"
 }

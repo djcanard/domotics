@@ -28,9 +28,9 @@ class HomeWizardServiceTest extends WireMockTest {
 
         assertThat(response)
                 .isEqualTo(BasicResponse.builder()
-                        .productName("P1 meter")
+                        .productName("P1 Meter")
                         .productType("HWE-P1")
-                        .firmwareVersion("4.19")
+                        .firmwareVersion("5.18")
                         .serial("5c2faf0ad04a")
                         .apiVersion("v1")
                         .build());
