@@ -1,14 +1,14 @@
 package nl.mtbparts.domotics.mdns;
 
 import io.vertx.core.eventbus.EventBus;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.jmdns.ServiceEvent;
 
 @Slf4j
-@Singleton
+@ApplicationScoped
 public class ServiceListener implements javax.jmdns.ServiceListener {
 
     @Inject
