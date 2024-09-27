@@ -2,13 +2,14 @@ package nl.mtbparts.domotics.homewizard.device;
 
 import lombok.Builder;
 import lombok.Value;
+import nl.mtbparts.domotics.device.DeviceInfo;
 
 import javax.jmdns.ServiceInfo;
 import java.util.Arrays;
 
 @Builder
 @Value
-public class HomewizardDeviceInfo {
+public class HomewizardDeviceInfo implements DeviceInfo {
     String name;
     String host;
     int port;
@@ -29,5 +30,15 @@ public class HomewizardDeviceInfo {
                 .productName(serviceInfo.getPropertyString("product_name"))
                 .productType(HomewizardProductType.of(serviceInfo.getPropertyString("product_type")))
                 .build();
+    }
+
+    @Override
+    public String getDeviceName() {
+        return name;
+    }
+
+    @Override
+    public String getDeviceType() {
+        return productType.getValue();
     }
 }

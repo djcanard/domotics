@@ -47,10 +47,10 @@ public class MeasurementResponse {
     Double totalPowerExportT2Kwh;
 
     @JsonProperty("active_power_w")
-    Double activePowerW;
+    Integer activePowerW;
 
     @JsonProperty("active_power_l1_w")
-    Double activePowerL1W;
+    Integer activePowerL1W;
 
     @JsonProperty("active_current_l1_a")
     Double activeCurrentL1A;

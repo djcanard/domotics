@@ -2,6 +2,7 @@ package nl.mtbparts.domotics.homewizard.device;
 
 import io.quarkus.scheduler.Scheduler;
 import io.quarkus.vertx.ConsumeEvent;
+import io.vertx.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -9,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import nl.mtbparts.domotics.homewizard.api.ApiProvider;
 import nl.mtbparts.domotics.homewizard.api.BasicResponse;
 import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
+import nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent;
+
+import static nl.mtbparts.domotics.homewizard.measurement.MeasurementConsumer.MEASUREMENT_EVENT;
 
 @Slf4j
 @ApplicationScoped
@@ -19,6 +23,9 @@ public class P1MeterConsumer {
 
     @Inject
     Scheduler scheduler;
+
+    @Inject
+    EventBus eventBus;
 
     /**
      * When api availability is toggled, we get a resolved event
@@ -39,7 +46,7 @@ public class P1MeterConsumer {
     }
 
     private void logBasic(HomewizardDeviceInfo deviceInfo) {
-        if (!deviceInfo.isApiEnabled()) {
+        if (apiDisabled(deviceInfo)) {
             return;
         }
 
@@ -47,21 +54,20 @@ public class P1MeterConsumer {
         log.info("basic: {}", response);
     }
 
-    public void logMeasurement(HomewizardDeviceInfo deviceInfo) {
-        if (!deviceInfo.isApiEnabled()) {
+    public void publishMeasurement(HomewizardDeviceInfo deviceInfo) {
+        if (apiDisabled(deviceInfo)) {
             return;
         }
 
         try {
             MeasurementResponse response = apiProvider.measurement(deviceInfo.getHost(), deviceInfo.getPort()).request();
-            log.info("measurement: {}", response);
+            eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(deviceInfo, response));
         } catch (WebApplicationException e) {
             log.error(e.getMessage(), e);
             if (e.getResponse().getStatus() == 403) {
                 unscheduleMeasurement(deviceInfo);
             }
         }
-
     }
 
     private void scheduleMeasurement(HomewizardDeviceInfo deviceInfo) {
@@ -70,11 +76,19 @@ public class P1MeterConsumer {
         }
         scheduler.newJob(deviceInfo.getName())
                 .setInterval("${homewizard.p1.measurement.schedule.interval}")
-                .setTask(executionContext -> logMeasurement(deviceInfo))
+                .setTask(executionContext -> publishMeasurement(deviceInfo))
                 .schedule();
     }
 
     private void unscheduleMeasurement(HomewizardDeviceInfo deviceInfo) {
         scheduler.unscheduleJob(deviceInfo.getName());
+    }
+
+    private boolean apiDisabled(HomewizardDeviceInfo deviceInfo) {
+        if (deviceInfo.isApiEnabled()) {
+            return false;
+        }
+        log.debug("API is not enabled");
+        return true;
     }
 }
