@@ -7,7 +7,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import nl.mtbparts.domotics.device.DeviceInfo;
+import nl.mtbparts.domotics.device.Device;
 import nl.mtbparts.domotics.device.DeviceRepository;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class DevicesResource {
 
     @CheckedTemplate
     public static class Templates {
-        public static native TemplateInstance devices(List<DeviceInfo> devices);
+        public static native TemplateInstance devices(List<Device> devices);
     }
 
     @GET

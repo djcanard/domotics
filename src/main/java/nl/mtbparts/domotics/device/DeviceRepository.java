@@ -11,17 +11,17 @@ import java.util.Map;
 @ApplicationScoped
 public class DeviceRepository {
 
-    private final Map<String, DeviceInfo> devices = new HashMap<>();
+    private final Map<String, Device> devices = new HashMap<>();
 
-    public void add(DeviceInfo deviceInfo) {
-        devices.put(deviceInfo.getDeviceId(), deviceInfo);
+    public void add(Device device) {
+        devices.put(device.getDeviceId(), device);
     }
 
-    public void remove(DeviceInfo deviceInfo) {
-        devices.remove(deviceInfo.getDeviceId());
+    public void remove(Device device) {
+        devices.remove(device.getDeviceId());
     }
 
-    public List<DeviceInfo> getDevices() {
+    public List<Device> getDevices() {
         return devices.values().stream().toList();
     }
 

@@ -26,23 +26,23 @@ public class HomewizardDeviceConsumer {
 
     @ConsumeEvent(value = "hwenergy.resolved")
     void onResolved(ServiceInfo serviceInfo) {
-        HomewizardDeviceInfo deviceInfo = HomewizardDeviceInfo.of(serviceInfo);
+        HomewizardDevice device = HomewizardDevice.of(serviceInfo);
 
-        deviceRepository.add(deviceInfo);
+        deviceRepository.add(device);
 
-        if (!deviceInfo.isApiEnabled()) {
-            log.warn("API is not enabled for device: {}", deviceInfo.getName());
+        if (!device.isApiEnabled()) {
+            log.warn("API is not enabled for device: {}", device.getServiceName());
         }
 
-        eventBus.publish(deviceInfo.getProductType().getValue() + ".resolved", deviceInfo);
+        eventBus.publish(device.getDeviceType() + ".resolved", device);
     }
 
     @ConsumeEvent(value = "hwenergy.removed")
     void onRemoved(ServiceInfo serviceInfo) {
-        HomewizardDeviceInfo deviceInfo = HomewizardDeviceInfo.of(serviceInfo);
+        HomewizardDevice device = HomewizardDevice.of(serviceInfo);
 
-        deviceRepository.remove(deviceInfo);
+        deviceRepository.remove(device);
 
-        eventBus.publish(deviceInfo.getProductType().getValue() + ".removed", deviceInfo);
+        eventBus.publish(device.getDeviceType() + ".removed", device);
     }
 }

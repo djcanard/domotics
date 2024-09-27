@@ -13,7 +13,7 @@ public class MeasurementConsumer {
     @ConsumeEvent(value = MEASUREMENT_EVENT)
     public void onMeasurementEvent(MeasurementEvent event) {
         log.info("measurement: [{}] total: {} kWh, active: {} W",
-                event.getDeviceInfo().getDeviceName(),
+                event.getDevice().getDeviceName(),
                 event.getMeasurement().getTotalPowerImportKwh(),
                 event.getMeasurement().getActivePowerW());
     }

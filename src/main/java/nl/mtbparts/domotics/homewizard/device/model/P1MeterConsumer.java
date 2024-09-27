@@ -1,4 +1,4 @@
-package nl.mtbparts.domotics.homewizard.device.p1;
+package nl.mtbparts.domotics.homewizard.device.model;
 
 import io.quarkus.scheduler.Scheduler;
 import io.quarkus.vertx.ConsumeEvent;
@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import nl.mtbparts.domotics.homewizard.api.ApiProvider;
 import nl.mtbparts.domotics.homewizard.api.BasicResponse;
 import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
-import nl.mtbparts.domotics.homewizard.device.HomewizardDeviceInfo;
+import nl.mtbparts.domotics.homewizard.device.HomewizardDevice;
 import nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -39,63 +39,63 @@ public class P1MeterConsumer {
      * When api availability is toggled, we get a resolved event
      */
     @ConsumeEvent(value = "HWE-P1.resolved", blocking = true)
-    void onResolved(HomewizardDeviceInfo deviceInfo) {
-        log.info("P1 Meter device resolved: {}", deviceInfo);
+    void onResolved(HomewizardDevice device) {
+        log.info("P1 Meter device resolved: {}", device);
 
-        logBasic(deviceInfo);
+        logBasic(device);
         if (measurementScheduleEnabled) {
-            scheduleMeasurement(deviceInfo);
+            scheduleMeasurement(device);
         }
     }
 
     @ConsumeEvent(value = "HWE-P1.removed")
-    void onRemoved(HomewizardDeviceInfo deviceInfo) {
-        log.info("P1 Meter device removed: {}", deviceInfo);
+    void onRemoved(HomewizardDevice device) {
+        log.info("P1 Meter device removed: {}", device);
 
-        unscheduleMeasurement(deviceInfo);
+        unscheduleMeasurement(device);
     }
 
-    private void logBasic(HomewizardDeviceInfo deviceInfo) {
-        if (apiDisabled(deviceInfo)) {
+    private void logBasic(HomewizardDevice device) {
+        if (apiDisabled(device)) {
             return;
         }
 
-        BasicResponse response = apiProvider.basic(deviceInfo.getHost(), deviceInfo.getPort()).request();
+        BasicResponse response = apiProvider.basic(device.getServiceHost(), device.getServicePort()).request();
         log.info("basic: {}", response);
     }
 
-    public void publishMeasurement(HomewizardDeviceInfo deviceInfo) {
-        if (apiDisabled(deviceInfo)) {
+    public void publishMeasurement(HomewizardDevice device) {
+        if (apiDisabled(device)) {
             return;
         }
 
         try {
-            MeasurementResponse response = apiProvider.measurement(deviceInfo.getHost(), deviceInfo.getPort()).request();
-            eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(deviceInfo, response));
+            MeasurementResponse response = apiProvider.measurement(device.getServiceHost(), device.getServicePort()).request();
+            eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
         } catch (WebApplicationException e) {
             log.error(e.getMessage(), e);
             if (e.getResponse().getStatus() == 403) {
-                unscheduleMeasurement(deviceInfo);
+                unscheduleMeasurement(device);
             }
         }
     }
 
-    private void scheduleMeasurement(HomewizardDeviceInfo deviceInfo) {
-        if (scheduler.getScheduledJob(deviceInfo.getName()) != null) {
-            unscheduleMeasurement(deviceInfo);
+    private void scheduleMeasurement(HomewizardDevice device) {
+        if (scheduler.getScheduledJob(device.getServiceName()) != null) {
+            unscheduleMeasurement(device);
         }
-        scheduler.newJob(deviceInfo.getName())
+        scheduler.newJob(device.getServiceName())
                 .setInterval(measurementScheduleInterval)
-                .setTask(executionContext -> publishMeasurement(deviceInfo))
+                .setTask(executionContext -> publishMeasurement(device))
                 .schedule();
     }
 
-    private void unscheduleMeasurement(HomewizardDeviceInfo deviceInfo) {
-        scheduler.unscheduleJob(deviceInfo.getName());
+    private void unscheduleMeasurement(HomewizardDevice device) {
+        scheduler.unscheduleJob(device.getServiceName());
     }
 
-    private boolean apiDisabled(HomewizardDeviceInfo deviceInfo) {
-        if (deviceInfo.isApiEnabled()) {
+    private boolean apiDisabled(HomewizardDevice device) {
+        if (device.isApiEnabled()) {
             return false;
         }
         log.debug("API is not enabled");

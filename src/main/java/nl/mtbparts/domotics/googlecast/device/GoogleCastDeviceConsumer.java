@@ -27,20 +27,31 @@ public class GoogleCastDeviceConsumer {
 
     @ConsumeEvent(value = "googlecast.resolved")
     void onResolved(ServiceInfo serviceInfo) {
-        GoogleCastDeviceInfo deviceInfo = GoogleCastDeviceInfo.of(serviceInfo);
+        GoogleCastDevice device = GoogleCastDevice.of(serviceInfo);
 
-        deviceRepository.add(deviceInfo);
+        deviceRepository.add(device);
 
         ServiceLogger.log(serviceInfo);
-//        eventBus.publish(deviceInfo.getProductType().getValue() + ".resolved", deviceInfo);
+
+        if (GoogleCastModelName.isKnown(device.getDeviceType())) {
+            eventBus.publish(device.getDeviceType() + ".resolved", device);
+        } else {
+            eventBus.publish("Generic Google Cast.resolved", device);
+        }
     }
 
     @ConsumeEvent(value = "googlecast.removed")
     void onRemoved(ServiceInfo serviceInfo) {
-        GoogleCastDeviceInfo deviceInfo = GoogleCastDeviceInfo.of(serviceInfo);
+        GoogleCastDevice device = GoogleCastDevice.of(serviceInfo);
 
-        deviceRepository.remove(deviceInfo);
+        deviceRepository.remove(device);
 
-//        eventBus.publish(deviceInfo.getProductType().getValue() + ".removed", deviceInfo);
+        ServiceLogger.log(serviceInfo);
+
+        if (GoogleCastModelName.isKnown(device.getDeviceType())) {
+            eventBus.publish(device.getDeviceType() + ".removed", device);
+        } else {
+            eventBus.publish("Generic Google Cast.removed", device);
+        }
     }
 }

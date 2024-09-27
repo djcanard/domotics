@@ -1,28 +1,17 @@
 package nl.mtbparts.domotics.homewizard.device;
 
-public enum HomewizardProductType {
-    HWE_P1("HWE-P1"),       // P1 Meter
-    HWE_SKT("HWE-SKT"),     // Energy Socket
-    HWE_WTR("HWE-WTR"),     // Watermeter
-    HWE_KWH1("HWE-KWH1"),   // kWh Meter (1 phase)
-    HWE_KWH3("HWE-KWH3");   // kWh Meter (3 phase)
+import java.util.List;
 
-    private final String value;
+public class HomewizardProductType {
+    public static String HWE_P1 = "HWE-P1";       // P1 Meter
+    public static String HWE_SKT = "HWE-SKT";     // Energy Socket
+    public static String HWE_WTR = "HWE-WTR";     // Watermeter
+    public static String HWE_KWH1 = "HWE-KWH1";   // kWh Meter (1 phase)
+    public static String HWE_KWH3 = "HWE-KWH3";   // kWh Meter (3 phase)
 
-    HomewizardProductType(String value) {
-        this.value = value;
-    }
+    private static List<String> values = List.of(HWE_P1, HWE_SKT, HWE_WTR, HWE_KWH1, HWE_KWH3);
 
-    public String getValue() {
-        return value;
-    }
-
-    public static HomewizardProductType of(String value) {
-        for (HomewizardProductType s : values()) {
-            if (s.value.equals(value)) {
-                return s;
-            }
-        }
-        throw new IllegalArgumentException("Unknown HomewizardProductType: " + value);
+    public static boolean isKnown(String productType) {
+        return values.contains(productType);
     }
 }
