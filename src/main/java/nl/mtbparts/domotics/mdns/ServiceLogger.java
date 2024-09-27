@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 public class ServiceLogger {
@@ -31,7 +32,9 @@ public class ServiceLogger {
 //        log.debug("service info type sub : {}", serviceInfo.getTypeWithSubtype());
 //        log.debug("service info priority : {}", serviceInfo.getPriority());
 //        log.debug("service info weight   : {}", serviceInfo.getWeight());
-            log.debug("service info props    : {}", Collections.list(serviceInfo.getPropertyNames()));
+            List<String> properties = Collections.list(serviceInfo.getPropertyNames());
+            log.debug("service info props    : {}", properties);
+            properties.forEach(p -> log.debug("service info prop[{}] : {}", p, serviceInfo.getPropertyString(p)));
 //        log.debug("service info textbytes: {}", new String(serviceInfo.getTextBytes()));
 //        log.debug("service info inet4    : {}", (Object) serviceInfo.getInet4Addresses());
 //        log.debug("service info inet6    : {}", (Object) serviceInfo.getInet6Addresses());

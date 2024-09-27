@@ -33,6 +33,11 @@ public class HomewizardDeviceInfo implements DeviceInfo {
     }
 
     @Override
+    public String getDeviceId() {
+        return name + "-" + serial;
+    }
+
+    @Override
     public String getDeviceName() {
         return name;
     }

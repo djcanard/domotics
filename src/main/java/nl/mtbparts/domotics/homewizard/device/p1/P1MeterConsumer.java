@@ -1,4 +1,4 @@
-package nl.mtbparts.domotics.homewizard.device;
+package nl.mtbparts.domotics.homewizard.device.p1;
 
 import io.quarkus.scheduler.Scheduler;
 import io.quarkus.vertx.ConsumeEvent;
@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import nl.mtbparts.domotics.homewizard.api.ApiProvider;
 import nl.mtbparts.domotics.homewizard.api.BasicResponse;
 import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
+import nl.mtbparts.domotics.homewizard.device.HomewizardDeviceInfo;
 import nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import static nl.mtbparts.domotics.homewizard.measurement.MeasurementConsumer.MEASUREMENT_EVENT;
 
@@ -27,6 +29,12 @@ public class P1MeterConsumer {
     @Inject
     EventBus eventBus;
 
+    @ConfigProperty(name = "homewizard.p1.measurement.schedule.enabled", defaultValue = "true")
+    boolean measurementScheduleEnabled;
+
+    @ConfigProperty(name = "homewizard.p1.measurement.schedule.interval", defaultValue = "5s")
+    String measurementScheduleInterval;
+
     /**
      * When api availability is toggled, we get a resolved event
      */
@@ -35,7 +43,9 @@ public class P1MeterConsumer {
         log.info("P1 Meter device resolved: {}", deviceInfo);
 
         logBasic(deviceInfo);
-        scheduleMeasurement(deviceInfo);
+        if (measurementScheduleEnabled) {
+            scheduleMeasurement(deviceInfo);
+        }
     }
 
     @ConsumeEvent(value = "HWE-P1.removed")
@@ -75,7 +85,7 @@ public class P1MeterConsumer {
             unscheduleMeasurement(deviceInfo);
         }
         scheduler.newJob(deviceInfo.getName())
-                .setInterval("${homewizard.p1.measurement.schedule.interval}")
+                .setInterval(measurementScheduleInterval)
                 .setTask(executionContext -> publishMeasurement(deviceInfo))
                 .schedule();
     }

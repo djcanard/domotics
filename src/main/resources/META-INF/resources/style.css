@@ -1,0 +1,10 @@
+  body, input {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: medium;
+  }
+
+  #app {
+    font-size: medium;
+    width: 800px;
+    margin: auto;
+  }
