@@ -34,7 +34,7 @@ public class HomewizardDeviceConsumer {
             log.warn("API is not enabled for device: {}", device.getServiceName());
         }
 
-        eventBus.publish(device.getDeviceType() + ".resolved", device);
+        eventBus.send(device.getDeviceType() + ".resolved", device);
     }
 
     @ConsumeEvent(value = "hwenergy.removed")
@@ -43,6 +43,6 @@ public class HomewizardDeviceConsumer {
 
         deviceRepository.remove(device);
 
-        eventBus.publish(device.getDeviceType() + ".removed", device);
+        eventBus.send(device.getDeviceType() + ".removed", device);
     }
 }

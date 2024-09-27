@@ -71,7 +71,7 @@ public class P1MeterConsumer {
 
         try {
             MeasurementResponse response = apiProvider.measurement(device.getServiceHost(), device.getServicePort()).request();
-            eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
+            eventBus.send(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
         } catch (WebApplicationException e) {
             log.error(e.getMessage(), e);
             if (e.getResponse().getStatus() == 403) {

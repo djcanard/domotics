@@ -9,10 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.jmdns.JmDNS;
-import javax.jmdns.ServiceInfo;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +20,9 @@ public class ServiceDiscovery {
 
     @ConfigProperty(name = "service-discovery.enabled", defaultValue = "true")
     boolean serviceDiscoveryEnabled;
+
+    @ConfigProperty(name = "service-discovery.service-types")
+    List<String> serviceTypes;
 
     @Inject
     ServiceListener serviceListener;
@@ -49,23 +50,11 @@ public class ServiceDiscovery {
     public void start() throws IOException {
         jmDNS = JmDNS.create(InetAddress.getLocalHost(), "homewizard");
 
-        jmDNS.addServiceListener(ServiceType.HWENERGY.getValue(), serviceListener);
-        jmDNS.addServiceListener(ServiceType.GOOGLECAST.getValue(), serviceListener);
+        log.info("Service discovery started for: {}", serviceTypes);
+        serviceTypes.forEach(type -> jmDNS.addServiceListener(type, serviceListener));
     }
 
     public void stop() {
-        jmDNS.removeServiceListener(ServiceType.HWENERGY.getValue(), serviceListener);
-        jmDNS.removeServiceListener(ServiceType.GOOGLECAST.getValue(), serviceListener);
-    }
-
-    public List<ServiceInfo> listServices(ServiceType serviceType) {
-        log.info("Listing devices for {}", serviceType);
-
-        List<ServiceInfo> serviceInfos = Arrays.stream(jmDNS.list(serviceType.getValue(), 3000)).toList();
-
-        log.info("Devices found: {}", serviceInfos.size());
-        serviceInfos.forEach(serviceInfo -> log.info("serviceInfo: {}", serviceInfo));
-
-        return serviceInfos;
+        serviceTypes.forEach(type -> jmDNS.removeServiceListener(type, serviceListener));
     }
 }

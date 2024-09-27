@@ -31,12 +31,16 @@ public class GoogleCastDeviceConsumer {
 
         deviceRepository.add(device);
 
-        ServiceLogger.log(serviceInfo);
+        if (device.getDeviceType() == null) {
+            log.error("Device type is null, cannot send resolved event");
+            ServiceLogger.log(serviceInfo);
+            return;
+        }
 
         if (GoogleCastModelName.isKnown(device.getDeviceType())) {
-            eventBus.publish(device.getDeviceType() + ".resolved", device);
+            eventBus.send(device.getDeviceType() + ".resolved", device);
         } else {
-            eventBus.publish("Generic Google Cast.resolved", device);
+            eventBus.send("Generic Google Cast.resolved", device);
         }
     }
 
@@ -46,12 +50,16 @@ public class GoogleCastDeviceConsumer {
 
         deviceRepository.remove(device);
 
-        ServiceLogger.log(serviceInfo);
+        if (device.getDeviceType() == null) {
+            log.error("Device type is null, cannot send removed event");
+            ServiceLogger.log(serviceInfo);
+            return;
+        }
 
         if (GoogleCastModelName.isKnown(device.getDeviceType())) {
-            eventBus.publish(device.getDeviceType() + ".removed", device);
+            eventBus.send(device.getDeviceType() + ".removed", device);
         } else {
-            eventBus.publish("Generic Google Cast.removed", device);
+            eventBus.send("Generic Google Cast.removed", device);
         }
     }
 }

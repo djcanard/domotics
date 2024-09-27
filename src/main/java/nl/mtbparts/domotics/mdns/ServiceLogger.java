@@ -11,33 +11,33 @@ import java.util.List;
 public class ServiceLogger {
 
     public static void log(ServiceEvent serviceEvent) {
-        log.debug("event: {} - {}", serviceEvent.getType(), serviceEvent.getName());
+        log.info("event: {} - {}", serviceEvent.getType(), serviceEvent.getName());
 //        log.info("event source: {}", serviceEvent.getSource());
     }
 
     public static void log(ServiceInfo serviceInfo) {
-        if (log.isDebugEnabled()) {
-            log.debug("service info app      : {}", serviceInfo.getApplication());
-            log.debug("service info name     : {}", serviceInfo.getName());
-//        log.debug("service info nice     : {}", serviceInfo.getNiceTextString());
-//        log.debug("service info qname    : {}", serviceInfo.getQualifiedName());
-//        log.debug("service info server   : {}", serviceInfo.getServer());
-//        log.debug("service info domain   : {}", serviceInfo.getDomain());
-            log.debug("service info host addr: {}", (Object) serviceInfo.getHostAddresses());
-            log.debug("service info protocol : {}", serviceInfo.getProtocol());
-            log.debug("service info port     : {}", serviceInfo.getPort());
-//        log.debug("service info key      : {}", serviceInfo.getKey());
-//        log.debug("service info type     : {}", serviceInfo.getType());
-//        log.debug("service info subtype  : {}", serviceInfo.getSubtype());
-//        log.debug("service info type sub : {}", serviceInfo.getTypeWithSubtype());
-//        log.debug("service info priority : {}", serviceInfo.getPriority());
-//        log.debug("service info weight   : {}", serviceInfo.getWeight());
+        if (log.isInfoEnabled()) {
+            log.info("service info app      : {}", serviceInfo.getApplication());
+            log.info("service info name     : {}", serviceInfo.getName());
+//        log.info("service info nice     : {}", serviceInfo.getNiceTextString());
+//        log.info("service info qname    : {}", serviceInfo.getQualifiedName());
+//        log.info("service info server   : {}", serviceInfo.getServer());
+//        log.info("service info domain   : {}", serviceInfo.getDomain());
+            log.info("service info host addr: {}", (Object) serviceInfo.getHostAddresses());
+            log.info("service info protocol : {}", serviceInfo.getProtocol());
+            log.info("service info port     : {}", serviceInfo.getPort());
+//        log.info("service info key      : {}", serviceInfo.getKey());
+//        log.info("service info type     : {}", serviceInfo.getType());
+//        log.info("service info subtype  : {}", serviceInfo.getSubtype());
+//        log.info("service info type sub : {}", serviceInfo.getTypeWithSubtype());
+//        log.info("service info priority : {}", serviceInfo.getPriority());
+//        log.info("service info weight   : {}", serviceInfo.getWeight());
             List<String> properties = Collections.list(serviceInfo.getPropertyNames());
-            log.debug("service info props    : {}", properties);
-            properties.forEach(p -> log.debug("service info prop[{}] : {}", p, serviceInfo.getPropertyString(p)));
-//        log.debug("service info textbytes: {}", new String(serviceInfo.getTextBytes()));
-//        log.debug("service info inet4    : {}", (Object) serviceInfo.getInet4Addresses());
-//        log.debug("service info inet6    : {}", (Object) serviceInfo.getInet6Addresses());
+            log.info("service info props    : {}", properties);
+            properties.forEach(p -> log.info("service info prop[{}] : {}", p, serviceInfo.getPropertyString(p)));
+//        log.info("service info textbytes: {}", new String(serviceInfo.getTextBytes()));
+//        log.info("service info inet4    : {}", (Object) serviceInfo.getInet4Addresses());
+//        log.info("service info inet6    : {}", (Object) serviceInfo.getInet6Addresses());
         }
     }
 }
