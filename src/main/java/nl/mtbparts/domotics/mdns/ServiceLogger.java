@@ -32,9 +32,11 @@ public class ServiceLogger {
 //        log.info("service info type sub : {}", serviceInfo.getTypeWithSubtype());
 //        log.info("service info priority : {}", serviceInfo.getPriority());
 //        log.info("service info weight   : {}", serviceInfo.getWeight());
-            List<String> properties = Collections.list(serviceInfo.getPropertyNames());
-            log.info("service info props    : {}", properties);
-            properties.forEach(p -> log.info("service info prop[{}] : {}", p, serviceInfo.getPropertyString(p)));
+            if (serviceInfo.getPropertyNames() != null) {
+                List<String> properties = Collections.list(serviceInfo.getPropertyNames());
+                log.info("service info props    : {}", properties);
+                properties.forEach(p -> log.info("service info prop[{}] : {}", p, serviceInfo.getPropertyString(p)));
+            }
 //        log.info("service info textbytes: {}", new String(serviceInfo.getTextBytes()));
 //        log.info("service info inet4    : {}", (Object) serviceInfo.getInet4Addresses());
 //        log.info("service info inet6    : {}", (Object) serviceInfo.getInet6Addresses());

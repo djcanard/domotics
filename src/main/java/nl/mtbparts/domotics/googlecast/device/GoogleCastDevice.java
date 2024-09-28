@@ -47,16 +47,16 @@ public class GoogleCastDevice implements Device {
                 .serviceHost(Arrays.stream(serviceInfo.getHostAddresses()).findFirst().orElse(null))
                 .servicePort(serviceInfo.getPort())
                 .id(serviceInfo.getPropertyString("id"))
-                .capabilities(getIntegerValue(serviceInfo.getPropertyString("ca"), -1))
+                .capabilities(getIntegerValue(serviceInfo.getPropertyString("ca"), null))
                 .friendlyName(serviceInfo.getPropertyString("fn"))
                 .modelName(serviceInfo.getPropertyString("md"))
-                .protocolVersion(getIntegerValue(serviceInfo.getPropertyString("ve"), -1))
+                .protocolVersion(getIntegerValue(serviceInfo.getPropertyString("ve"), null))
                 .iconPath(serviceInfo.getPropertyString("ic"))
                 .appTitle(serviceInfo.getPropertyString("rs"))
                 .build();
     }
 
-    public static Integer getIntegerValue(String value, int defaultValue) {
+    public static Integer getIntegerValue(String value, Integer defaultValue) {
         if (value == null || value.isBlank()) {
             return defaultValue;
         }
