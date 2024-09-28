@@ -3,6 +3,7 @@ package nl.mtbparts.domotics.template;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -24,8 +25,16 @@ public class DevicesResource {
     }
 
     @GET
+    @Consumes(MediaType.TEXT_HTML)
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance get() {
         return Templates.devices(deviceRepository.getDevices());
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Device> getDevices() {
+        return deviceRepository.getDevices();
     }
 }
