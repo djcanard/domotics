@@ -1,11 +1,14 @@
 package nl.mtbparts.domotics.homewizard;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import nl.mtbparts.domotics.homewizard.api.ApiProvider;
 import nl.mtbparts.domotics.homewizard.api.BasicResponse;
 import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
-import nl.mtbparts.test.wiremock.WireMockTest;
+import nl.mtbparts.test.wiremock.InjectWireMock;
+import nl.mtbparts.test.wiremock.WireMockTestResource;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,20 +17,24 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
-class ApiProviderTest extends WireMockTest {
+@QuarkusTestResource(WireMockTestResource.class)
+class ApiProviderTest {
 
+    @InjectWireMock
+    WireMockServer wireMockServer;
+    
     @Inject
     ApiProvider apiProvider;
 
     @Test
     void testBasic() {
-        wireMock().stubFor(get(urlEqualTo("/api"))
+        wireMockServer.stubFor(get(urlEqualTo("/api"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("p1meter-basic.json")));
 
         BasicResponse response = apiProvider
-                .basic(wireMock().getOptions().bindAddress(), wireMock().port())
+                .basic(wireMockServer.getOptions().bindAddress(), wireMockServer.port())
                 .request();
 
         assertThat(response)
@@ -42,13 +49,13 @@ class ApiProviderTest extends WireMockTest {
 
     @Test
     void testMeasurement() {
-        wireMock().stubFor(get(urlEqualTo("/api/v1/data"))
+        wireMockServer.stubFor(get(urlEqualTo("/api/v1/data"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("p1meter-measurement.json")));
 
         MeasurementResponse response = apiProvider
-                .measurement(wireMock().getOptions().bindAddress(), wireMock().port())
+                .measurement(wireMockServer.getOptions().bindAddress(), wireMockServer.port())
                 .request();
 
         assertThat(response)

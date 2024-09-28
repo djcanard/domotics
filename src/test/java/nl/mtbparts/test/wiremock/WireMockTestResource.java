@@ -11,7 +11,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 
 public class WireMockTestResource implements QuarkusTestResourceLifecycleManager {
 
-    public static WireMockServer wireMockServer;
+    WireMockServer wireMockServer;
 
     @AfterEach
     public void afterEach() {
@@ -34,5 +34,10 @@ public class WireMockTestResource implements QuarkusTestResourceLifecycleManager
         if (null != wireMockServer) {
             wireMockServer.stop();
         }
+    }
+
+    @Override
+    public void inject(TestInjector testInjector) {
+        testInjector.injectIntoFields(wireMockServer, new TestInjector.AnnotatedAndMatchesType(InjectWireMock.class, WireMockServer.class));
     }
 }
