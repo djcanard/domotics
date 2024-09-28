@@ -16,8 +16,7 @@ import java.util.List;
 @Startup
 public class ServiceDiscovery {
 
-    @ConfigProperty(name = "service-discovery.enabled", defaultValue = "true")
-    boolean serviceDiscoveryEnabled;
+    private boolean serviceDiscoveryEnabled;
 
     @ConfigProperty(name = "service-discovery.service-types")
     List<String> serviceTypes;
@@ -40,6 +39,10 @@ public class ServiceDiscovery {
         if (serviceDiscoveryEnabled) {
             stop();
         }
+    }
+
+    public void setServiceDiscoveryEnabled(@ConfigProperty(name = "service-discovery.enabled", defaultValue = "true") boolean enabled) {
+        this.serviceDiscoveryEnabled = enabled;
     }
 
     public void start() {

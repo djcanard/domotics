@@ -41,7 +41,7 @@ public class HomewizardDeviceConsumer {
     void onRemoved(ServiceInfo serviceInfo) {
         HomewizardDevice device = HomewizardDevice.of(serviceInfo);
 
-        deviceRepository.remove(device);
+        deviceRepository.remove(device.getDeviceId());
 
         eventBus.send(device.getDeviceType() + ".removed", device);
     }

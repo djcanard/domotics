@@ -48,7 +48,7 @@ public class GoogleCastDeviceConsumer {
     void onRemoved(ServiceInfo serviceInfo) {
         GoogleCastDevice device = GoogleCastDevice.of(serviceInfo);
 
-        deviceRepository.remove(device);
+        deviceRepository.remove(device.getDeviceId());
 
         if (device.getDeviceType() == null) {
             log.error("Device type is null, cannot send removed event");
