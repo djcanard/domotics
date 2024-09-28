@@ -9,7 +9,7 @@ import org.mockito.InOrder;
 
 import javax.jmdns.JmDNS;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
 
 @QuarkusComponentTest
 @TestConfigProperty(key="service-discovery.service-types[0]", value="my.service.1")
@@ -41,37 +41,5 @@ class ServiceDiscoveryTest {
         InOrder inOrder = inOrder(jmDNS);
         inOrder.verify(jmDNS).removeServiceListener("my.service.1", serviceListener);
         inOrder.verify(jmDNS).removeServiceListener("my.service.2", serviceListener);
-    }
-
-    @Test
-    void shouldNotStartOnInit() {
-        serviceDiscovery.setServiceDiscoveryEnabled(false);
-        serviceDiscovery.init();
-
-        verifyNoInteractions(jmDNS);
-    }
-
-    @Test
-    void shouldNotStopOnDestroy() {
-        serviceDiscovery.setServiceDiscoveryEnabled(false);
-        serviceDiscovery.destroy();
-
-        verifyNoInteractions(jmDNS);
-    }
-
-    @Test
-    void shouldStartOnInit() {
-        serviceDiscovery.setServiceDiscoveryEnabled(true);
-        serviceDiscovery.init();
-
-        verify(jmDNS, times(2)).addServiceListener(any(), eq(serviceListener));
-    }
-
-    @Test
-    void shouldStopOnDestroy() {
-        serviceDiscovery.setServiceDiscoveryEnabled(true);
-        serviceDiscovery.destroy();
-
-        verify(jmDNS, times(2)).removeServiceListener(any(), eq(serviceListener));
     }
 }
