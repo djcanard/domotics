@@ -22,7 +22,7 @@ public class WireMockTestResource implements QuarkusTestResourceLifecycleManager
     public Map<String, String> start() {
         wireMockServer = new WireMockServer(options()
                 .dynamicPort()
-                .notifier(new Slf4jNotifier(true)));
+                .notifier(new Slf4jNotifier(false)));
 
         wireMockServer.start();
 
