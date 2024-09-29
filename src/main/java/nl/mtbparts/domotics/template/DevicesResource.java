@@ -10,6 +10,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import nl.mtbparts.domotics.device.Device;
 import nl.mtbparts.domotics.device.DeviceRepository;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
 
@@ -19,16 +20,19 @@ public class DevicesResource {
     @Inject
     DeviceRepository deviceRepository;
 
+    @ConfigProperty(name = "grafana.endpoint")
+    String grafanaEndpoint;
+
     @CheckedTemplate
     public static class Templates {
-        public static native TemplateInstance devices(List<Device> devices);
+        public static native TemplateInstance devices(List<Device> devices, String grafanaEndpoint);
     }
 
     @GET
     @Consumes(MediaType.TEXT_HTML)
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance get() {
-        return Templates.devices(deviceRepository.getDevices());
+        return Templates.devices(deviceRepository.getDevices(), grafanaEndpoint);
     }
 
     @GET

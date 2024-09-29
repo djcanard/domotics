@@ -15,8 +15,15 @@
         });
     </script>
 
-    <h1>Devices</h1>
+    <div id="grafana">
+        <h1>Grafana</h1>
+
+        <div>Grafana: <a href="{grafanaEndpoint}" target="grafana">{grafanaEndpoint}</a></div>
+    </div>
+
     <div id="devices">
+        <h1>Devices</h1>
+
         <div>Devices found: {devices.size}</div>
         <ul>
             {#for element in devices}
