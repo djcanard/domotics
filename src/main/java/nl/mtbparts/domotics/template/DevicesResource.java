@@ -20,7 +20,7 @@ public class DevicesResource {
     @Inject
     DeviceRepository deviceRepository;
 
-    @ConfigProperty(name = "grafana.endpoint")
+    @ConfigProperty(name = "grafana.endpoint", defaultValue = "")
     String grafanaEndpoint;
 
     @CheckedTemplate
