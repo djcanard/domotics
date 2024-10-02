@@ -1,5 +1,8 @@
 package nl.mtbparts.domotics.homewizard.device.model;
 
+import io.micrometer.core.instrument.Clock;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import io.quarkus.scheduler.Scheduler;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.component.QuarkusComponentTest;
@@ -11,6 +14,7 @@ import nl.mtbparts.domotics.homewizard.api.MeasurementApi;
 import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
 import nl.mtbparts.domotics.homewizard.device.HomewizardDevice;
 import nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.function.Consumer;
@@ -32,6 +36,20 @@ class P1MeterConsumerTest {
 
     @InjectMock
     EventBus eventBus;
+
+    @InjectMock
+    MeterRegistry meterRegistry;
+
+    MeterRegistry.Config config = mock(MeterRegistry.Config.class);
+    Clock mockClock = mock(Clock.class);
+    Timer mockTimer = mock(Timer.class);
+
+    @BeforeEach
+    void beforeEach() {
+        when(config.clock()).thenReturn(mockClock);
+        when(meterRegistry.config()).thenReturn(config);
+        when(meterRegistry.timer(anyString(), any(String[].class))).thenReturn(mockTimer);
+    }
 
     @Test
     void shouldScheduleMeasurementOnResolved() {
@@ -83,6 +101,6 @@ class P1MeterConsumerTest {
 
         p1MeterConsumer.publishMeasurement(device);
 
-        verify(eventBus).send("measurement.event", MeasurementEvent.of(device, response));
+        verify(eventBus).publish("measurement.event", MeasurementEvent.of(device, response));
     }
 }

@@ -4,11 +4,11 @@ import io.quarkus.vertx.ConsumeEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.slf4j.Slf4j;
 
+import static nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent.MEASUREMENT_EVENT;
+
 @Slf4j
 @ApplicationScoped
-public class MeasurementConsumer {
-
-    public static final String MEASUREMENT_EVENT = "measurement.event";
+public class LogMeasurementConsumer {
 
     @ConsumeEvent(value = MEASUREMENT_EVENT)
     public void onMeasurementEvent(MeasurementEvent event) {

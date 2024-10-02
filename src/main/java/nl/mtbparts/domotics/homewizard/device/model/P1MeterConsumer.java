@@ -1,5 +1,7 @@
 package nl.mtbparts.domotics.homewizard.device.model;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import io.quarkus.scheduler.Scheduler;
 import io.quarkus.vertx.ConsumeEvent;
 import io.vertx.core.eventbus.EventBus;
@@ -14,7 +16,7 @@ import nl.mtbparts.domotics.homewizard.device.HomewizardDevice;
 import nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import static nl.mtbparts.domotics.homewizard.measurement.MeasurementConsumer.MEASUREMENT_EVENT;
+import static nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent.MEASUREMENT_EVENT;
 
 @Slf4j
 @ApplicationScoped
@@ -28,6 +30,9 @@ public class P1MeterConsumer {
 
     @Inject
     EventBus eventBus;
+
+    @Inject
+    MeterRegistry meterRegistry;
 
     @ConfigProperty(name = "homewizard.p1.measurement.schedule.enabled", defaultValue = "true")
     boolean measurementScheduleEnabled;
@@ -60,7 +65,10 @@ public class P1MeterConsumer {
             return;
         }
 
+        Timer.Sample sample = Timer.start(meterRegistry);
         BasicResponse response = apiProvider.basic(device.getServiceHost(), device.getServicePort()).request();
+        sample.stop(meterRegistry.timer("homewizard.api.basic.timer", "device", device.getDeviceId()));
+
         log.info("basic: {}", response);
     }
 
@@ -70,8 +78,11 @@ public class P1MeterConsumer {
         }
 
         try {
+            Timer.Sample sample = Timer.start(meterRegistry);
             MeasurementResponse response = apiProvider.measurement(device.getServiceHost(), device.getServicePort()).request();
-            eventBus.send(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
+            sample.stop(meterRegistry.timer("homewizard.api.measurement.timer", "device", device.getDeviceId()));
+
+            eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
         } catch (WebApplicationException e) {
             log.error(e.getMessage(), e);
             if (e.getResponse().getStatus() == 403) {

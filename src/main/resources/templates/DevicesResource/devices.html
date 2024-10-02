@@ -15,19 +15,44 @@
         });
     </script>
 
+    {#if grafanaEndpoint != null }
     <div id="grafana">
         <h1>Grafana</h1>
 
         <div>Grafana: <a href="{grafanaEndpoint}" target="grafana">{grafanaEndpoint}</a></div>
     </div>
+    {/if}
 
-    <div id="devices">
-        <h1>Devices</h1>
+    <div id="metrics">
+        <h1>Metrics</h1>
+
+        <div>Prometheus: <a href="/q/dev-ui/io.quarkus.quarkus-micrometer/prometheus" target="metrics">Micrometer metrics</a></div>
+        <div>Meters found: {meters.size}</div>
+        <ul>
+            {#for m in meters}
+                <li>[{m.id.name} - {m.id.getTag('device')} - {m.id.type}]</li>
+                <ul>
+                    {#for e in m.measure}
+                        <li>{e.statistic.tagValueRepresentation}:
+                            {#if e.statistic.name == 'COUNT'}
+                                {e.value.format(0)}
+                            {#else}
+                                {e.value.format(3)} {m.id.getTag('unit')}
+                            {/if}
+                        </li>
+                    {/for}
+                </ul>
+            {/for}
+        </ul>
+    </div>
+
+    <div id="service-discovery">
+        <h1>Service discovery</h1>
 
         <div>Devices found: {devices.size}</div>
         <ul>
-            {#for element in devices}
-            <li>[{element.deviceId}] {element.deviceName} - {element.deviceType}</li>
+            {#for d in devices}
+            <li>[{d.deviceId}] {d.deviceName} - {d.deviceType}</li>
             {/for}
         </ul>
     </div>

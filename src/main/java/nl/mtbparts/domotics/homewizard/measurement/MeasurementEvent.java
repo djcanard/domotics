@@ -9,6 +9,9 @@ import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MeasurementEvent {
+
+    public static final String MEASUREMENT_EVENT = "measurement.event";
+
     Device device;
     MeasurementResponse measurement;
 
