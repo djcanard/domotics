@@ -11,21 +11,29 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestHTTPEndpoint(DevicesResource.class)
+@TestHTTPEndpoint(MainResource.class)
 @QuarkusTest
-class DeviceResourceTest {
+class MainResourceTest {
 
     @Inject
     DeviceRepository deviceRepository;
 
     @Test
-    void shouldDiscoverP1Meter() {
+    void shouldGetDevice() {
         deviceRepository.add(HomewizardDevice.builder()
                 .productType("HWE-P1")
                 .build());
 
         String response = given().contentType(ContentType.JSON)
-                .when().get()
+                .when().get("/devices")
+                .then().statusCode(200).extract().asString();
+        assertThat(response).contains("HWE-P1");
+    }
+
+    @Test
+    void shouldGetMeter() {
+        String response = given().contentType(ContentType.JSON)
+                .when().get("/meters")
                 .then().statusCode(200).extract().asString();
         assertThat(response).contains("HWE-P1");
     }
