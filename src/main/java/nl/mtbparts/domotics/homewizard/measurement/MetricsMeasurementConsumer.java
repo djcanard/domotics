@@ -5,12 +5,9 @@ import io.micrometer.core.instrument.Tags;
 import io.quarkus.vertx.ConsumeEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.ToDoubleFunction;
 
 import static nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent.MEASUREMENT_EVENT;
 
@@ -20,9 +17,10 @@ public class MetricsMeasurementConsumer {
     @Inject
     MeterRegistry meterRegistry;
 
-    private final MeasurementState measurementState = new MeasurementState();
-    private final Map<String, MeasurementState> activePowerValues = new ConcurrentHashMap<>();
-    private final Map<String, MeasurementState> totalPowerImportValues = new ConcurrentHashMap<>();
+    /**
+     * Map with gauge names with values of measurements per device
+     */
+    private final Map<String, Map<String, GaugeValue>> gaugeValues = new ConcurrentHashMap<>();
 
     @ConsumeEvent(value = MEASUREMENT_EVENT)
     public void onMeasurementEvent(MeasurementEvent event) {
@@ -30,28 +28,46 @@ public class MetricsMeasurementConsumer {
 
         meterRegistry.counter("homewizard.measurement.count", Tags.of("device", deviceId)).increment();
 
-        measurementState.activePowerW = event.getMeasurement().getActivePowerW();
-        measurementState.totalPowerImportKwh = event.getMeasurement().getTotalPowerImportKwh();
-
-        updateGauge(deviceId, "homewizard.measurement.activepowerw", m -> m.activePowerW, "W", activePowerValues);
-        updateGauge(deviceId, "homewizard.measurement.totalpowerimportkwh", m -> m.totalPowerImportKwh, "kWh", totalPowerImportValues);
+        updateGauge("homewizard.measurement.activepowerw", "W", event.getDevice().getDeviceId(), event.getMeasurement().getActivePowerW().doubleValue());
+        updateGauge("homewizard.measurement.totalpowerimportkwh", "kWh", event.getDevice().getDeviceId(), event.getMeasurement().getTotalPowerImportKwh());
     }
 
-    private void updateGauge(String deviceId, String gaugeName, ToDoubleFunction<MeasurementState> supplier, String unit, Map<String, MeasurementState> values) {
-        Tags tags = Tags.of("device", deviceId, "unit", unit);
-        values.compute(deviceId, (k, v) -> {
+    private void updateGauge(String gaugeName, String unit, String deviceId, Double value) {
+        gaugeValues.compute(gaugeName, (k, v) -> {
+           if (v == null) {
+               v = new ConcurrentHashMap<>();
+           }
+           return v;
+        });
+
+        gaugeValues.get(gaugeName).compute(deviceId, (k, v) -> {
             if (v == null) {
-                v = meterRegistry.gauge(gaugeName, tags, measurementState, supplier);
+                GaugeValue gaugeValue = GaugeValue.of(value);
+                v = meterRegistry.gauge(gaugeName, Tags.of("device", deviceId, "unit", unit), gaugeValue, GaugeValue::get);
+            } else {
+                v.update(value);
             }
             return v;
         });
     }
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private static class MeasurementState {
-        String deviceId;
-        Integer activePowerW;
-        Double totalPowerImportKwh;
+    private static class GaugeValue {
+        private Double value;
+
+        private GaugeValue(Double value) {
+            this.value = value;
+        }
+
+        public void update(Double value) {
+            this.value = value;
+        }
+
+        public Double get() {
+            return value;
+        }
+
+        public static GaugeValue of(Double value) {
+            return new GaugeValue(value);
+        }
     }
 }
