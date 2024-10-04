@@ -54,7 +54,7 @@ public class MainResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Meter> getMeters() {
         return meterRegistry.getMeters().stream()
-                .filter(m -> m.getId().getName().startsWith("homewizard"))
+                .filter(m -> m.getId().getName().startsWith("homewizard")) // TODO rename
                 .sorted(Comparator.comparing(m -> m.getId().getName()))
                 .toList();
     }

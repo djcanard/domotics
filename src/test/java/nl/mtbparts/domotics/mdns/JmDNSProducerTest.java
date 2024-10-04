@@ -20,6 +20,6 @@ class JmDNSProducerTest {
     @Test
     void shouldProduce() {
         assertThat(jmDNS).isNotNull();
-        assertThat(jmDNS.getName()).isEqualTo("homewizard");
+        assertThat(jmDNS.getName()).isEqualTo("domotics");
     }
 }

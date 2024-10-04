@@ -12,6 +12,6 @@ public class JmDNSProducer {
     @Produces
     @ApplicationScoped
     JmDNS jmDNS() throws IOException {
-        return JmDNS.create(InetAddress.getLocalHost(), "homewizard");
+        return JmDNS.create(InetAddress.getLocalHost(), "domotics");
     }
 }
