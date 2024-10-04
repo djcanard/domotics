@@ -35,6 +35,6 @@ class MainResourceTest {
         String response = given().contentType(ContentType.JSON)
                 .when().get("/meters")
                 .then().statusCode(200).extract().asString();
-        assertThat(response).contains("homewizard.measurement.count");
+        assertThat(response).contains("domotics.metrics.homewizard.measurement.count");
     }
 }

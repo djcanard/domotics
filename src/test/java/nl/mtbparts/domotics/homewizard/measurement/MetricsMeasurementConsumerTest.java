@@ -30,7 +30,7 @@ class MetricsMeasurementConsumerTest {
 
         metricsMeasurementConsumer.onMeasurementEvent(event);
 
-        RequiredSearch search = meterRegistry.get("homewizard.measurement.count").tags("device", "counterId");
+        RequiredSearch search = meterRegistry.get("domotics.metrics.homewizard.measurement.count").tags("device", "counterId");
         assertThat(search.counters()).hasSize(1);
         assertThat(search.counter().count()).isEqualTo(1);
     }
@@ -50,7 +50,7 @@ class MetricsMeasurementConsumerTest {
         metricsMeasurementConsumer.onMeasurementEvent(event1);
         metricsMeasurementConsumer.onMeasurementEvent(event2);
 
-        RequiredSearch search = meterRegistry.get("homewizard.measurement.activepowerw").tags("device", "activePowerId", "unit", "W");
+        RequiredSearch search = meterRegistry.get("domotics.metrics.homewizard.measurement.activepowerw").tags("device", "activePowerId", "unit", "W");
         assertThat(search.gauges()).hasSize(1);
         assertThat(search.gauge().value()).isEqualTo(300);
     }
@@ -72,7 +72,7 @@ class MetricsMeasurementConsumerTest {
         metricsMeasurementConsumer.onMeasurementEvent(event1);
         metricsMeasurementConsumer.onMeasurementEvent(event2);
 
-        RequiredSearch search = meterRegistry.get("homewizard.measurement.totalpowerimportkwh").tags("device", "totalPowerImportId", "unit", "kWh");
+        RequiredSearch search = meterRegistry.get("domotics.metrics.homewizard.measurement.totalpowerimportkwh").tags("device", "totalPowerImportId", "unit", "kWh");
         assertThat(search.gauges()).hasSize(1);
         assertThat(search.gauge().value()).isEqualTo(2000d);
     }

@@ -26,10 +26,10 @@ public class MetricsMeasurementConsumer {
     public void onMeasurementEvent(MeasurementEvent event) {
         String deviceId = event.getDevice().getDeviceId();
 
-        meterRegistry.counter("homewizard.measurement.count", Tags.of("device", deviceId)).increment();
+        meterRegistry.counter("domotics.metrics.homewizard.measurement.count", Tags.of("device", deviceId)).increment();
 
-        updateGauge("homewizard.measurement.activepowerw", "W", event.getDevice().getDeviceId(), event.getMeasurement().getActivePowerW().doubleValue());
-        updateGauge("homewizard.measurement.totalpowerimportkwh", "kWh", event.getDevice().getDeviceId(), event.getMeasurement().getTotalPowerImportKwh());
+        updateGauge("domotics.metrics.homewizard.measurement.activepowerw", "W", event.getDevice().getDeviceId(), event.getMeasurement().getActivePowerW().doubleValue());
+        updateGauge("domotics.metrics.homewizard.measurement.totalpowerimportkwh", "kWh", event.getDevice().getDeviceId(), event.getMeasurement().getTotalPowerImportKwh());
     }
 
     private void updateGauge(String gaugeName, String unit, String deviceId, Double value) {

@@ -67,7 +67,7 @@ public class P1MeterConsumer {
 
         Timer.Sample sample = Timer.start(meterRegistry);
         BasicResponse response = apiProvider.basic(device.getServiceHost(), device.getServicePort()).request();
-        sample.stop(meterRegistry.timer("homewizard.api.basic.timer", "device", device.getDeviceId()));
+        sample.stop(meterRegistry.timer("domotics.metrics.homewizard.api.basic.timer", "device", device.getDeviceId()));
 
         log.info("basic: {}", response);
     }
@@ -80,7 +80,7 @@ public class P1MeterConsumer {
         try {
             Timer.Sample sample = Timer.start(meterRegistry);
             MeasurementResponse response = apiProvider.measurement(device.getServiceHost(), device.getServicePort()).request();
-            sample.stop(meterRegistry.timer("homewizard.api.measurement.timer", "device", device.getDeviceId()));
+            sample.stop(meterRegistry.timer("domotics.metrics.homewizard.api.measurement.timer", "device", device.getDeviceId()));
 
             eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
         } catch (WebApplicationException e) {

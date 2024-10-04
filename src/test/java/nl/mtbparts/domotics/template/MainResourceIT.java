@@ -38,10 +38,10 @@ class MainResourceIT {
                         .when().get("/meters")
                         .then().statusCode(200).extract().jsonPath()
                         .getList("id.name")).contains(
-                                "homewizard.api.basic.timer",
-                                "homewizard.api.measurement.timer",
-                                "homewizard.measurement.activepowerw",
-                                "homewizard.measurement.count",
-                                "homewizard.measurement.totalpowerimportkwh"));
+                                "domotics.metrics.homewizard.api.basic.timer",
+                                "domotics.metrics.homewizard.api.measurement.timer",
+                                "domotics.metrics.homewizard.measurement.activepowerw",
+                                "domotics.metrics.homewizard.measurement.count",
+                                "domotics.metrics.homewizard.measurement.totalpowerimportkwh"));
     }
 }

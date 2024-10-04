@@ -54,7 +54,7 @@ public class MainResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Meter> getMeters() {
         return meterRegistry.getMeters().stream()
-                .filter(m -> m.getId().getName().startsWith("homewizard")) // TODO rename
+                .filter(m -> m.getId().getName().startsWith("domotics.metrics"))
                 .sorted(Comparator.comparing(m -> m.getId().getName()))
                 .toList();
     }
