@@ -12,6 +12,9 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.with;
 
+/**
+ * These tests will only succeed if you have a HomeWizard P1 meter in your local network
+ */
 @TestHTTPEndpoint(MainResource.class)
 @QuarkusIntegrationTest
 class MainResourceIT {
