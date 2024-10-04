@@ -12,8 +12,8 @@ import javax.jmdns.JmDNS;
 import static org.mockito.Mockito.inOrder;
 
 @QuarkusComponentTest
-@TestConfigProperty(key="service-discovery.service-types[0]", value="my.service.1")
-@TestConfigProperty(key="service-discovery.service-types[1]", value="my.service.2")
+@TestConfigProperty(key="domotics.service-discovery.service-types[0]", value="my.service.1")
+@TestConfigProperty(key="domotics.service-discovery.service-types[1]", value="my.service.2")
 class ServiceDiscoveryTest {
 
     @Inject

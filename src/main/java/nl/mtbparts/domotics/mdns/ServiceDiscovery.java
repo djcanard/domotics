@@ -16,10 +16,10 @@ import java.util.List;
 @Startup
 public class ServiceDiscovery {
 
-    @ConfigProperty(name = "service-discovery.enabled", defaultValue = "true")
+    @ConfigProperty(name = "domotics.service-discovery.enabled", defaultValue = "true")
     boolean serviceDiscoveryEnabled;
 
-    @ConfigProperty(name = "service-discovery.service-types")
+    @ConfigProperty(name = "domotics.service-discovery.service-types")
     List<String> serviceTypes;
 
     @Inject

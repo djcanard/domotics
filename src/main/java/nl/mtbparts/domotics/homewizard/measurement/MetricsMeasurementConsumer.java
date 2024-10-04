@@ -18,7 +18,7 @@ public class MetricsMeasurementConsumer {
     MeterRegistry meterRegistry;
 
     /**
-     * Map with gauge names with values of measurements per device
+     * Map with gauge names with most recent measurement value per device
      */
     private final Map<String, Map<String, GaugeValue>> gaugeValues = new ConcurrentHashMap<>();
 

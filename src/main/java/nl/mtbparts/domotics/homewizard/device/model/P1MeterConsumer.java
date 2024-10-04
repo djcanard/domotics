@@ -34,10 +34,10 @@ public class P1MeterConsumer {
     @Inject
     MeterRegistry meterRegistry;
 
-    @ConfigProperty(name = "homewizard.p1.measurement.schedule.enabled", defaultValue = "true")
+    @ConfigProperty(name = "domotics.homewizard.p1.measurement.schedule.enabled", defaultValue = "true")
     boolean measurementScheduleEnabled;
 
-    @ConfigProperty(name = "homewizard.p1.measurement.schedule.interval", defaultValue = "5s")
+    @ConfigProperty(name = "domotics.homewizard.p1.measurement.schedule.interval", defaultValue = "5s")
     String measurementScheduleInterval;
 
     /**
