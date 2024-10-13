@@ -1,14 +1,16 @@
-import Meter from './types/Meter.ts'
+import {Measure, Meter} from './types/Meter.ts'
 
 export default function MeterComponent({meter}: {meter: Meter}) {
+
+    const measuresList = meter.measures.map((m: Measure) =>
+        <li key={m.tagValueRepresentation}>{m.tagValueRepresentation}: {m.value} {meter.unit}</li>
+    );
 
     return (
         <div className="meter">
             <span>[{meter.name} - {meter.device} - {meter.type}]</span>
             <ul>
-                <li>count: 1</li>
-                <li>total: 0,487</li>
-                <li>max: 0,487</li>
+                {measuresList}
             </ul>
         </div>
     )

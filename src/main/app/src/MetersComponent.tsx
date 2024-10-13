@@ -1,15 +1,20 @@
+import { useState, useEffect } from 'react';
+
 import MeterComponent from './MeterComponent.tsx'
 import Meter from './types/Meter.tsx'
 
-const meters: Array<Meter> = [{
-    name: "domotics.metrics.homewizard.api.basic.timer",
-    device: "p1meter-0AD04A",
-    type: "TIMER"
-}];
-
 export default function MetersComponent() {
 
-    const metersList = meters.map(m =>
+    const [meters, setMeters] = useState([]);
+
+    useEffect(() => {
+        fetch('/meters')
+           .then(response => response.json())
+           .then(data => setMeters(data))
+           .catch((err) => console.error(err))
+    }, []);
+
+    const metersList = meters.map((m: Meter) =>
         <li key={m.name}><MeterComponent meter={m}/></li>
     );
 
