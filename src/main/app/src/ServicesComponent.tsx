@@ -1,6 +1,6 @@
-import Service from './Service.tsx'
+import ServiceComponent from './ServiceComponent.tsx'
 
-export default function Services() {
+export default function ServicesComponent() {
 
     return (
         <div id="services">
@@ -10,7 +10,7 @@ export default function Services() {
 
             <div className="services">
                 <ul>
-                    <li><Service /></li>
+                    <li><ServiceComponent /></li>
                 </ul>
             </div>
         </div>

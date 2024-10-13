@@ -1,6 +1,19 @@
-import Meter from './Meter.tsx'
+import MeterComponent from './MeterComponent.tsx'
+import Meter from './types.tsx'
 
-export default function Meters() {
+const meters: Array<Meter> = [
+    {
+        name: "domotics.metrics.homewizard.api.basic.timer",
+        device: "p1meter-0AD04A",
+        type: "TIMER"
+    }
+];
+
+export default function MetersComponent() {
+
+    const metersList = meters.map(m =>
+        <li key={m.name}><MeterComponent meter={m}/></li>
+    );
 
     return (
         <div id="meters">
@@ -14,7 +27,7 @@ export default function Meters() {
 
             <div className="meters">
                 <ul>
-                    <li><Meter /></li>
+                    {metersList}
                 </ul>
             </div>
         </div>
