@@ -1,6 +1,6 @@
-import Meter from './types.ts'
+import Meter from './types/Meter.ts'
 
-export default function MeterComponent({meter}) {
+export default function MeterComponent({meter}: {meter: Meter}) {
 
     return (
         <div className="meter">

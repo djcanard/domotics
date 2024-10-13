@@ -1,9 +1,6 @@
-const service = {
-    id: "p1meter-0AD04A",
-    name: "P1 Meter",
-    type: "HWE-P1"
-}
-export default function ServiceComponent() {
+import Service from './types/Service.ts'
+
+export default function ServiceComponent({service}: {service: Service}) {
 
     return (
         <div className="service">
