@@ -1,4 +1,5 @@
-import {Measure, Meter} from './types/Meter.ts'
+import Meter from './types/Meter.ts'
+import Measure from './types/Meter.ts'
 
 export default function MeterComponent({meter}: {meter: Meter}) {
 
