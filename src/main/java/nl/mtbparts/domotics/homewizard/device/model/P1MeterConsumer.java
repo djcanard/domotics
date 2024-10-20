@@ -4,6 +4,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.quarkus.scheduler.Scheduler;
 import io.quarkus.vertx.ConsumeEvent;
+import io.smallrye.reactive.messaging.MutinyEmitter;
 import io.vertx.core.eventbus.EventBus;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,6 +16,8 @@ import nl.mtbparts.domotics.homewizard.api.MeasurementResponse;
 import nl.mtbparts.domotics.homewizard.device.HomewizardDevice;
 import nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.OnOverflow;
 
 import static nl.mtbparts.domotics.homewizard.measurement.MeasurementEvent.MEASUREMENT_EVENT;
 
@@ -30,6 +33,11 @@ public class P1MeterConsumer {
 
     @Inject
     EventBus eventBus;
+
+    @Inject
+    @Channel("measurement.events")
+    @OnOverflow(OnOverflow.Strategy.DROP) // TODO generates warning in log
+    MutinyEmitter<MeasurementEvent> emitter;
 
     @Inject
     MeterRegistry meterRegistry;
@@ -82,7 +90,9 @@ public class P1MeterConsumer {
             MeasurementResponse response = apiProvider.measurement(device.getServiceHost(), device.getServicePort()).request();
             sample.stop(meterRegistry.timer("domotics.metrics.homewizard.api.measurement.timer", "device", device.getDeviceId()));
 
+            // TODO refactor vertx eventbus to quarkus messaging
             eventBus.publish(MEASUREMENT_EVENT, MeasurementEvent.of(device, response));
+            emitter.sendAndForget(MeasurementEvent.of(device, response)); // TODO add test
         } catch (WebApplicationException e) {
             log.error(e.getMessage(), e);
             if (e.getResponse().getStatus() == 403) {

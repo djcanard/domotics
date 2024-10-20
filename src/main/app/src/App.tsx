@@ -6,6 +6,11 @@ import ServicesComponent from './ServicesComponent.tsx'
 export default function App() {
     const [count, setCount] = useState(0)
 
+    const eventSource = new EventSource("/api/events");
+    eventSource.onmessage = (event) => {
+        console.info('event:', event.data);
+    }
+
     return (
         <>
             <div>
